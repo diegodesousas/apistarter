@@ -11,21 +11,21 @@ type Service interface {
 }
 
 type service struct {
-	db *database.Database
+	db database.Conn
 }
 
 func (s service) FindByTicketId(tid string) ([]Media, error) {
-	medias := []Media{}
+	var medias []Media
 
 	sql := "SELECT * FROM medias WHERE ticket_id = $1"
 	if err := s.db.SelectContext(context.Background(), &medias, sql, tid); err != nil {
-		return []Media{}, err
+		return medias, err
 	}
 
 	return medias, nil
 }
 
-func NewMediaService(db *database.Database) service {
+func NewMediaService(db database.Conn) service {
 	return service{
 		db: db,
 	}

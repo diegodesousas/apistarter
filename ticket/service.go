@@ -11,16 +11,16 @@ type Service interface {
 	FindById(string) (*Ticket, error)
 }
 
-func NewService(database *database.Database, mediaService media.Service) DefaultTicketService {
+func NewService(conn database.Conn, mediaService media.Service) DefaultTicketService {
 	return DefaultTicketService{
 		MediaService: mediaService,
-		database:     database,
+		database:     conn,
 	}
 }
 
 type DefaultTicketService struct {
 	MediaService media.Service
-	database     *database.Database
+	database     database.Conn
 }
 
 func (s DefaultTicketService) FindById(id string) (*Ticket, error) {
