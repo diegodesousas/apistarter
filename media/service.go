@@ -7,14 +7,14 @@ import (
 )
 
 type Service interface {
-	FindByTicketId(string) ([]Media, error)
+	FindByTicketId(int64) ([]Media, error)
 }
 
 type service struct {
 	db database.Conn
 }
 
-func (s service) FindByTicketId(tid string) ([]Media, error) {
+func (s service) FindByTicketId(tid int64) ([]Media, error) {
 	var medias []Media
 
 	sql := "SELECT * FROM medias WHERE ticket_id = $1"

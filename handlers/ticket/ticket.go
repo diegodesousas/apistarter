@@ -2,7 +2,6 @@ package ticket
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/diegodesousas/apistarter/di"
@@ -15,7 +14,7 @@ var (
 		FindById(w, r, container.NewTicketService())
 	}
 	createTicketHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
-		CreateTicket(w, r, container.NewTxlTicketService(container.NewTransaction()))
+		CreateTicket(w, r, container.NewTxlTicketService(container.Database()))
 	}
 )
 
@@ -28,6 +27,10 @@ func CreateTicket(w http.ResponseWriter, r *http.Request, service ticket.TxServi
 	if err := service.Create(tkt); err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
+
+	if err := json.NewEncoder(w).Encode(tkt); err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
 }
 
 func FindById(w http.ResponseWriter, r *http.Request, service ticket.Service) {
@@ -35,7 +38,6 @@ func FindById(w http.ResponseWriter, r *http.Request, service ticket.Service) {
 
 	tkt, err := service.FindById(id)
 	if err != nil {
-		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 

@@ -9,21 +9,26 @@ import (
 type Container interface {
 	NewTicketService() ticket.Service
 	NewMediaService(conn database.Conn) media.Service
-	NewTxMediaService(tx database.Transaction) media.TxService
-	NewTxlTicketService(tx database.Transaction) ticket.TxService
+	NewTxMediaService(tx *database.Database) media.TxService
+	NewTxlTicketService(tx *database.Database) ticket.TxService
 	NewTransaction() database.Transaction
 	NewConn() (database.Conn, error)
+	Database() *database.Database
 }
 
 type container struct {
 	conn database.Conn
 }
 
+func (c container) Database() *database.Database {
+	return c.conn.(*database.Database)
+}
+
 func (c container) NewConn() (database.Conn, error) {
 	return database.New("postgres", "postgres://postgres:root@postgres11.hud:5432/apistarter?sslmode=disable")
 }
 
-func (c container) NewTxMediaService(tx database.Transaction) media.TxService {
+func (c container) NewTxMediaService(tx *database.Database) media.TxService {
 	return media.NewTxService(tx)
 }
 
@@ -31,7 +36,7 @@ func (c container) NewTransaction() database.Transaction {
 	return database.NewTx()
 }
 
-func (c container) NewTxlTicketService(tx database.Transaction) ticket.TxService {
+func (c container) NewTxlTicketService(tx *database.Database) ticket.TxService {
 	return ticket.NewTxTicketService(tx, c.NewTxMediaService(tx))
 }
 

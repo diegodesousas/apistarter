@@ -13,13 +13,13 @@ type Service interface {
 
 func NewService(conn database.Conn, mediaService media.Service) DefaultTicketService {
 	return DefaultTicketService{
-		MediaService: mediaService,
+		mediaService: mediaService,
 		database:     conn,
 	}
 }
 
 type DefaultTicketService struct {
-	MediaService media.Service
+	mediaService media.Service
 	database     database.Conn
 }
 
@@ -32,7 +32,7 @@ func (s DefaultTicketService) FindById(id string) (*Ticket, error) {
 		return nil, err
 	}
 
-	tkt.Medias, err = s.MediaService.FindByTicketId(tkt.ID)
+	tkt.Medias, err = s.mediaService.FindByTicketId(tkt.ID)
 	if err != nil {
 		return nil, err
 	}

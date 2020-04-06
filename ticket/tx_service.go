@@ -1,8 +1,9 @@
 package ticket
 
 import (
-	"log"
+	"context"
 
+	"github.com/Masterminds/squirrel"
 	"github.com/diegodesousas/apistarter/database"
 	"github.com/diegodesousas/apistarter/media"
 )
@@ -12,11 +13,11 @@ type TxService interface {
 }
 
 type TxTicketService struct {
-	tx           database.Transaction
+	tx           *database.Database
 	mediaService media.TxService
 }
 
-func NewTxTicketService(tx database.Transaction, txMediaService media.TxService) TxTicketService {
+func NewTxTicketService(tx *database.Database, txMediaService media.TxService) TxTicketService {
 	return TxTicketService{
 		tx:           tx,
 		mediaService: txMediaService,
@@ -24,11 +25,23 @@ func NewTxTicketService(tx database.Transaction, txMediaService media.TxService)
 }
 
 func (t TxTicketService) Create(tkt *Ticket) error {
-	if err := t.tx.Exec("INSERT INTO tickets ..."); err != nil {
+	sql, args, err := squirrel.
+		Insert("tickets").
+		PlaceholderFormat(squirrel.Dollar).
+		Suffix("RETURNING id").
+		Columns("name").
+		Values(tkt.Name).
+		ToSql()
+
+	if err = t.tx.QueryRowContext(context.Background(), sql, args...).Scan(&tkt.ID); err != nil {
 		return err
 	}
 
-	log.Printf("created: %s", tkt)
+	for _, m := range tkt.Medias {
+		if err := t.mediaService.Create(tkt.ID, &m); err != nil {
+			return err
+		}
+	}
 
-	return t.mediaService.Create(tkt.ID, tkt.Medias)
+	return nil
 }
