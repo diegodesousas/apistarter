@@ -11,12 +11,12 @@ func Routes() []router.Route {
 		{
 			Path:    "/tickets/:id",
 			Method:  http.MethodGet,
-			Handler: FindByIdHandler,
+			Handler: findByIdHandler,
 		},
 		{
 			Path:    "/tickets",
 			Method:  http.MethodPost,
-			Handler: CreateTicketHandler,
+			Handler: createTicketHandler,
 		},
 	}
 }

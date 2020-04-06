@@ -11,10 +11,10 @@ import (
 )
 
 var (
-	FindByIdHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
+	findByIdHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
 		FindById(w, r, container.NewTicketService())
 	}
-	CreateTicketHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
+	createTicketHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
 		CreateTicket(w, r, container.NewTxlTicketService(container.NewTransaction()))
 	}
 )
