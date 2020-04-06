@@ -2,6 +2,7 @@ package media
 
 import (
 	"context"
+	"errors"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/diegodesousas/apistarter/database"
@@ -12,7 +13,7 @@ type TxService interface {
 }
 
 type TxDefaultService struct {
-	tx *database.Database
+	tx database.TxConn
 }
 
 func (t TxDefaultService) Create(tid int64, media *Media) error {
@@ -24,18 +25,21 @@ func (t TxDefaultService) Create(tid int64, media *Media) error {
 		Values(media.Path, tid).
 		ToSql()
 
+	if media.Path == "error" {
+		return errors.New("test error")
+	}
 	if err != nil {
 		return err
 	}
 
-	if err = t.tx.QueryRowContext(context.Background(), sql, args...).Scan(&media.ID); err != nil {
+	if err = t.tx.ExecContext(context.Background(), sql, args...).Scan(&media.ID); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func NewTxService(tx *database.Database) TxDefaultService {
+func NewTxService(tx database.TxConn) TxDefaultService {
 	return TxDefaultService{
 		tx: tx,
 	}

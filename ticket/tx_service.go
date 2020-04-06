@@ -13,11 +13,11 @@ type TxService interface {
 }
 
 type TxTicketService struct {
-	tx           *database.Database
+	tx           database.TxConn
 	mediaService media.TxService
 }
 
-func NewTxTicketService(tx *database.Database, txMediaService media.TxService) TxTicketService {
+func NewTxTicketService(tx database.TxConn, txMediaService media.TxService) TxTicketService {
 	return TxTicketService{
 		tx:           tx,
 		mediaService: txMediaService,
@@ -33,7 +33,7 @@ func (t TxTicketService) Create(tkt *Ticket) error {
 		Values(tkt.Name).
 		ToSql()
 
-	if err = t.tx.QueryRowContext(context.Background(), sql, args...).Scan(&tkt.ID); err != nil {
+	if err = t.tx.ExecContext(context.Background(), sql, args...).Scan(&tkt.ID); err != nil {
 		return err
 	}
 
