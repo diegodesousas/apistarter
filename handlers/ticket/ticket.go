@@ -2,6 +2,7 @@ package ticket
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/diegodesousas/apistarter/di"
@@ -34,6 +35,7 @@ func FindById(w http.ResponseWriter, r *http.Request, service ticket.Service) {
 
 	tkt, err := service.FindById(id)
 	if err != nil {
+		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 

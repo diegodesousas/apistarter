@@ -1,5 +1,7 @@
 package media
 
 type Media struct {
-	Path string `json:"path"`
+	ID       int    `json:"id" db:"id"`
+	Path     string `json:"path" db:"path"`
+	TicketID string `json:"-" db:"ticket_id"`
 }

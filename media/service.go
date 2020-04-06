@@ -1,15 +1,32 @@
 package media
 
+import (
+	"context"
+
+	"github.com/diegodesousas/apistarter/database"
+)
+
 type Service interface {
-	FindByTicketId(string) []string
+	FindByTicketId(string) ([]Media, error)
 }
 
-type DefaultService struct{}
-
-func (m DefaultService) FindByTicketId(tid string) []string {
-	return []string{"Media 1", "Media 2", "Media 3"}
+type service struct {
+	db *database.Database
 }
 
-func NewMediaService() DefaultService {
-	return DefaultService{}
+func (s service) FindByTicketId(tid string) ([]Media, error) {
+	medias := []Media{}
+
+	sql := "SELECT * FROM medias WHERE ticket_id = $1"
+	if err := s.db.SelectContext(context.Background(), &medias, sql, tid); err != nil {
+		return []Media{}, err
+	}
+
+	return medias, nil
+}
+
+func NewMediaService(db *database.Database) service {
+	return service{
+		db: db,
+	}
 }

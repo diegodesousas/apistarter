@@ -8,34 +8,58 @@ import (
 
 type Container interface {
 	NewTicketService() ticket.Service
-	NewMediaService() media.Service
+	NewMediaService(*database.Database) media.Service
 	NewTxMediaService(tx database.Transaction) media.TxService
 	NewTxlTicketService(tx database.Transaction) ticket.TxService
 	NewTransaction() database.Transaction
+	NewConn() (*database.Database, error)
 }
 
-type defaultContainer struct{}
+type container struct {
+	conn *database.Database
+}
 
-func (c defaultContainer) NewTxMediaService(tx database.Transaction) media.TxService {
+func (c container) NewConn() (*database.Database, error) {
+	return database.New("postgres", "postgres://postgres:root@postgres11.hud:5432/apistarter?sslmode=disable")
+}
+
+func (c container) NewTxMediaService(tx database.Transaction) media.TxService {
 	return media.NewTxService(tx)
 }
 
-func (c defaultContainer) NewTransaction() database.Transaction {
+func (c container) NewTransaction() database.Transaction {
 	return database.NewTx()
 }
 
-func (c defaultContainer) NewTxlTicketService(tx database.Transaction) ticket.TxService {
+func (c container) NewTxlTicketService(tx database.Transaction) ticket.TxService {
 	return ticket.NewTxTicketService(tx, c.NewTxMediaService(tx))
 }
 
-func (c defaultContainer) NewMediaService() media.Service {
-	return media.NewMediaService()
+func (c container) NewMediaService(db *database.Database) media.Service {
+	return media.NewMediaService(db)
 }
 
-func (c defaultContainer) NewTicketService() ticket.Service {
-	return ticket.NewService(c.NewMediaService())
+func (c container) NewTicketService() ticket.Service {
+	return ticket.NewService(c.conn, c.NewMediaService(c.conn))
 }
 
-func NewContainer() defaultContainer {
-	return defaultContainer{}
+func (c container) Build() (*container, error) {
+	conn, err := c.NewConn()
+	if err != nil {
+		return nil, err
+	}
+	c.conn = conn
+
+	return &c, nil
+}
+
+func NewContainer() (*container, error) {
+	c := &container{}
+	conn, err := c.NewConn()
+	if err != nil {
+		return nil, err
+	}
+	c.conn = conn
+
+	return c, nil
 }

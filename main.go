@@ -10,8 +10,13 @@ import (
 )
 
 func main() {
+	container, err := di.NewContainer()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	r := router.New(
-		router.WithContainer(di.NewContainer()),
+		router.WithContainer(container),
 		router.WithRoutes(ticket.Routes()...),
 	)
 
