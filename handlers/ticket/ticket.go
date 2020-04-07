@@ -40,7 +40,7 @@ func CreateTicket(w http.ResponseWriter, r *http.Request, service ticket.TxServi
 		return err
 	}
 
-	if err := service.Create(tkt); err != nil {
+	if err := service.Create(r.Context(), tkt); err != nil {
 		log.Print(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return err

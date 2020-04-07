@@ -9,14 +9,14 @@ import (
 )
 
 type TxService interface {
-	Create(tid int64, media *Media) error
+	Create(context.Context, int64, *Media) error
 }
 
 type TxDefaultService struct {
 	tx database.TxConn
 }
 
-func (t TxDefaultService) Create(tid int64, media *Media) error {
+func (t TxDefaultService) Create(ctx context.Context, tid int64, media *Media) error {
 	sql, args, err := squirrel.
 		Insert("medias").
 		PlaceholderFormat(squirrel.Dollar).
@@ -32,7 +32,7 @@ func (t TxDefaultService) Create(tid int64, media *Media) error {
 		return err
 	}
 
-	if err = t.tx.ExecContext(context.Background(), sql, args...).Scan(&media.ID); err != nil {
+	if err = t.tx.ExecContext(ctx, sql, args...).Scan(&media.ID); err != nil {
 		return err
 	}
 
