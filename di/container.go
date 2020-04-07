@@ -42,16 +42,6 @@ func (c container) NewTicketService() ticket.Service {
 	return ticket.NewService(c.conn, c.NewMediaService(c.conn))
 }
 
-func (c container) Build() (*container, error) {
-	conn, err := c.NewConn()
-	if err != nil {
-		return nil, err
-	}
-	c.conn = conn
-
-	return &c, nil
-}
-
 func NewContainer() (*container, error) {
 	c := &container{}
 	conn, err := c.NewConn()

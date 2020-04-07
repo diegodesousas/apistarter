@@ -17,4 +17,9 @@ var (
 			router.container = container
 		}
 	}
+	WithMiddleware = func(middlewares ...Middleware) ConfigRouter {
+		return func(router *Router) {
+			router.middlewares = append(router.middlewares, middlewares...)
+		}
+	}
 )

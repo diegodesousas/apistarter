@@ -9,9 +9,10 @@ import (
 func Routes() []router.Route {
 	return []router.Route{
 		{
-			Path:    "/tickets/:id",
-			Method:  http.MethodGet,
-			Handler: findByIdHandler,
+			Path:        "/tickets/:id",
+			Method:      http.MethodGet,
+			Handler:     findByIdHandler,
+			Middlewares: router.Middlewares(ErrorMiddleware, RequestIDMiddleware),
 		},
 		{
 			Path:    "/tickets",

@@ -18,6 +18,7 @@ func main() {
 	r := router.New(
 		router.WithContainer(container),
 		router.WithRoutes(ticket.Routes()...),
+		router.WithMiddleware(router.GlobalMiddleware),
 	)
 
 	s := server.New(
