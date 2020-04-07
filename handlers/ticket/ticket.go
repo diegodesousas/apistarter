@@ -69,7 +69,13 @@ func FindById(w http.ResponseWriter, req *http.Request, service ticket.Service) 
 		return
 	}
 
-	if err = json.NewEncoder(w).Encode(tkt); err != nil {
+	bytes, err := json.Marshal(tkt)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	if _, err = w.Write(bytes); err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
