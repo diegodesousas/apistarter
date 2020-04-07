@@ -3,36 +3,47 @@ package ticket
 import (
 	"context"
 
+	"github.com/Masterminds/squirrel"
 	"github.com/diegodesousas/apistarter/database"
 	"github.com/diegodesousas/apistarter/media"
 )
 
 type Service interface {
-	FindById(string) (*Ticket, error)
+	FindById(context.Context, string) (*Ticket, error)
 }
 
-func NewService(conn database.Conn, mediaService media.Service) DefaultTicketService {
-	return DefaultTicketService{
+func NewService(conn database.Conn, mediaService media.Service) service {
+	return service{
 		mediaService: mediaService,
 		database:     conn,
 	}
 }
 
-type DefaultTicketService struct {
+type service struct {
 	mediaService media.Service
 	database     database.Conn
 }
 
-func (s DefaultTicketService) FindById(id string) (*Ticket, error) {
+func (s service) FindById(ctx context.Context, id string) (*Ticket, error) {
 	tkt := &Ticket{}
 
-	sql := "SELECT * FROM tickets WHERE id = $1"
-	err := s.database.GetContext(context.Background(), tkt, sql, id)
+	sql, args, err := squirrel.
+		Select("*").
+		From("tickets").
+		Where("id = ?", id).
+		PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+
 	if err != nil {
 		return nil, err
 	}
 
-	tkt.Medias, err = s.mediaService.FindByTicketId(tkt.ID)
+	err = s.database.GetContext(ctx, tkt, sql, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	tkt.Medias, err = s.mediaService.FindByTicketId(ctx, tkt.ID)
 	if err != nil {
 		return nil, err
 	}

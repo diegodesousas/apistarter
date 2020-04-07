@@ -54,10 +54,11 @@ func CreateTicket(w http.ResponseWriter, r *http.Request, service ticket.TxServi
 	return nil
 }
 
-func FindById(w http.ResponseWriter, r *http.Request, service ticket.Service) {
-	id := httprouter.ParamsFromContext(r.Context()).ByName("id")
+func FindById(w http.ResponseWriter, req *http.Request, service ticket.Service) {
+	ctx := req.Context()
+	id := httprouter.ParamsFromContext(ctx).ByName("id")
 
-	tkt, err := service.FindById(id)
+	tkt, err := service.FindById(ctx, id)
 	if err == sql.ErrNoRows {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return

@@ -3,22 +3,33 @@ package media
 import (
 	"context"
 
+	"github.com/Masterminds/squirrel"
 	"github.com/diegodesousas/apistarter/database"
 )
 
 type Service interface {
-	FindByTicketId(int64) ([]Media, error)
+	FindByTicketId(context.Context, int64) ([]Media, error)
 }
 
 type service struct {
 	db database.Conn
 }
 
-func (s service) FindByTicketId(tid int64) ([]Media, error) {
+func (s service) FindByTicketId(ctx context.Context, tid int64) ([]Media, error) {
 	var medias []Media
 
-	sql := "SELECT * FROM medias WHERE ticket_id = $1"
-	if err := s.db.SelectContext(context.Background(), &medias, sql, tid); err != nil {
+	sql, args, err := squirrel.
+		Select("*").
+		From("medias").
+		Where("ticket_id = ?", tid).
+		PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err = s.db.SelectContext(ctx, &medias, sql, args...); err != nil {
 		return medias, err
 	}
 

@@ -12,11 +12,11 @@ type TxService interface {
 	Create(context.Context, int64, *Media) error
 }
 
-type TxDefaultService struct {
+type txService struct {
 	tx database.TxConn
 }
 
-func (t TxDefaultService) Create(ctx context.Context, tid int64, media *Media) error {
+func (t txService) Create(ctx context.Context, tid int64, media *Media) error {
 	sql, args, err := squirrel.
 		Insert("medias").
 		PlaceholderFormat(squirrel.Dollar).
@@ -39,8 +39,8 @@ func (t TxDefaultService) Create(ctx context.Context, tid int64, media *Media) e
 	return nil
 }
 
-func NewTxService(tx database.TxConn) TxDefaultService {
-	return TxDefaultService{
+func NewTxService(tx database.TxConn) txService {
+	return txService{
 		tx: tx,
 	}
 }

@@ -12,19 +12,19 @@ type TxService interface {
 	Create(context.Context, *Ticket) error
 }
 
-type TxTicketService struct {
+type txService struct {
 	tx           database.TxConn
 	mediaService media.TxService
 }
 
-func NewTxTicketService(tx database.TxConn, txMediaService media.TxService) TxTicketService {
-	return TxTicketService{
+func NewTxTicketService(tx database.TxConn, txMediaService media.TxService) txService {
+	return txService{
 		tx:           tx,
 		mediaService: txMediaService,
 	}
 }
 
-func (t TxTicketService) Create(ctx context.Context, tkt *Ticket) error {
+func (t txService) Create(ctx context.Context, tkt *Ticket) error {
 	sql, args, err := squirrel.
 		Insert("tickets").
 		PlaceholderFormat(squirrel.Dollar).
