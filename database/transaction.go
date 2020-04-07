@@ -1,25 +1,24 @@
 package database
 
 import (
-	"log"
-	"math/rand"
+	"context"
+	"database/sql"
+
+	"github.com/jmoiron/sqlx"
 )
 
-type Transaction interface {
-	Exec(sql string) error
+type TxConn interface {
+	Conn
+	ExecContext(ctx context.Context, query string, args ...interface{}) *sql.Row
+	Commit() error
+	Rollback() error
 }
 
-type Tx struct {
-	id int
+type TxDatabase struct {
+	Database
+	*sqlx.Tx
 }
 
-func (t Tx) Exec(sql string) error {
-	log.Printf("tx id: %d persisted sql: %s", t.id, sql)
-	return nil
-}
-
-func NewTx() *Tx {
-	return &Tx{
-		id: rand.Int(),
-	}
+func (db TxDatabase) ExecContext(ctx context.Context, query string, args ...interface{}) *sql.Row {
+	return db.QueryRowContext(ctx, query, args...)
 }

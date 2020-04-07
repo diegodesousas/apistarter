@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -13,13 +12,6 @@ type Conn interface {
 	SelectContext(ctx context.Context, dest interface{}, query string, args ...interface{}) error
 	Begin() (TxConn, error)
 	Transaction(func(TxConn) error) error
-}
-
-type TxConn interface {
-	Conn
-	ExecContext(ctx context.Context, query string, args ...interface{}) *sql.Row
-	Commit() error
-	Rollback() error
 }
 
 type Database struct {
@@ -48,11 +40,6 @@ func (db Database) Transaction(f func(TxConn) error) error {
 	return tx.Rollback()
 }
 
-type TxDatabase struct {
-	Database
-	*sqlx.Tx
-}
-
 func (db Database) Begin() (TxConn, error) {
 	tx, err := db.Beginx()
 	if err != nil {
@@ -60,8 +47,4 @@ func (db Database) Begin() (TxConn, error) {
 	}
 
 	return &TxDatabase{db, tx}, nil
-}
-
-func (db TxDatabase) ExecContext(ctx context.Context, query string, args ...interface{}) *sql.Row {
-	return db.QueryRowContext(ctx, query, args...)
 }
