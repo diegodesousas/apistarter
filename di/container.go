@@ -11,7 +11,6 @@ type Container interface {
 	NewMediaService(conn database.Conn) media.Service
 	NewTxMediaService(tx database.TxConn) media.TxService
 	NewTxlTicketService(tx database.TxConn) ticket.TxService
-	NewTransaction() database.Transaction
 	NewConn() (database.Conn, error)
 }
 
@@ -29,10 +28,6 @@ func (c container) NewConn() (database.Conn, error) {
 
 func (c container) NewTxMediaService(tx database.TxConn) media.TxService {
 	return media.NewTxService(tx)
-}
-
-func (c container) NewTransaction() database.Transaction {
-	return database.NewTx()
 }
 
 func (c container) NewTxlTicketService(tx database.TxConn) ticket.TxService {
