@@ -16,6 +16,7 @@ type Conn interface {
 }
 
 type TxConn interface {
+	Conn
 	ExecContext(ctx context.Context, query string, args ...interface{}) *sql.Row
 	Commit() error
 	Rollback() error
@@ -48,6 +49,7 @@ func (db Database) Transaction(f func(TxConn) error) error {
 }
 
 type TxDatabase struct {
+	Database
 	*sqlx.Tx
 }
 
@@ -57,7 +59,7 @@ func (db Database) Begin() (TxConn, error) {
 		return nil, err
 	}
 
-	return &TxDatabase{tx}, nil
+	return &TxDatabase{db, tx}, nil
 }
 
 func (db TxDatabase) ExecContext(ctx context.Context, query string, args ...interface{}) *sql.Row {
