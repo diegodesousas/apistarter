@@ -1,25 +1,26 @@
 package ticket
 
 import (
-	"database/sql"
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/diegodesousas/apistarter/database"
 	"github.com/diegodesousas/apistarter/di"
+	"github.com/diegodesousas/apistarter/errorhandler"
 	"github.com/diegodesousas/apistarter/ticket"
 	"github.com/julienschmidt/httprouter"
 )
 
 var (
-	findByIdHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
-		FindById(w, r, container.NewTicketService())
+	FindByIdHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
+		if err := FindById(w, r, container.NewTicketService()); err != nil {
+			errorhandler.HttpHandler(w, err)
+		}
 	}
-	createTicketHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
+	CreateTicketHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
 		conn, err := container.NewConn()
 		if err != nil {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			errorhandler.HttpHandler(w, err)
 			return
 		}
 
@@ -28,7 +29,7 @@ var (
 		})
 
 		if err != nil {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			errorhandler.HttpHandler(w, err)
 		}
 	}
 )
@@ -36,47 +37,41 @@ var (
 func CreateTicket(w http.ResponseWriter, r *http.Request, service ticket.TxService) error {
 	tkt := &ticket.Ticket{}
 	if err := json.NewDecoder(r.Body).Decode(tkt); err != nil {
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return err
 	}
 
 	if err := service.Create(r.Context(), tkt); err != nil {
-		log.Print(err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return err
 	}
 
-	if err := json.NewEncoder(w).Encode(tkt); err != nil {
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	bytes, err := json.Marshal(tkt)
+	if err != nil {
+		return err
+	}
+	if _, err := w.Write(bytes); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func FindById(w http.ResponseWriter, req *http.Request, service ticket.Service) {
+func FindById(w http.ResponseWriter, req *http.Request, service ticket.Service) error {
 	ctx := req.Context()
 	id := httprouter.ParamsFromContext(ctx).ByName("id")
 
 	tkt, err := service.FindById(ctx, id)
-	if err == sql.ErrNoRows {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
+		return err
 	}
 
 	bytes, err := json.Marshal(tkt)
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
+		return err
 	}
 
 	if _, err = w.Write(bytes); err != nil {
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
+		return err
 	}
+
+	return nil
 }

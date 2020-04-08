@@ -25,8 +25,8 @@ func (t txService) Create(ctx context.Context, tid int64, media *Media) error {
 		Values(media.Path, tid).
 		ToSql()
 
-	if media.Path == "error" {
-		return errors.New("test error")
+	if media.Path == "errorhandler" {
+		return errors.New("test errorhandler")
 	}
 	if err != nil {
 		return err

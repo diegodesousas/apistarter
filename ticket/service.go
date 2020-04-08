@@ -40,12 +40,12 @@ func (s service) FindById(ctx context.Context, id string) (*Ticket, error) {
 
 	err = s.database.GetContext(ctx, tkt, sql, args...)
 	if err != nil {
-		return nil, err
+		return nil, database.HandleError(err)
 	}
 
 	tkt.Medias, err = s.mediaService.FindByTicketId(ctx, tkt.ID)
 	if err != nil {
-		return nil, err
+		return nil, database.HandleError(err)
 	}
 
 	return tkt, nil
