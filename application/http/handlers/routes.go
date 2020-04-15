@@ -3,16 +3,15 @@ package handlers
 import (
 	"net/http"
 
-	_ "github.com/diegodesousas/apistarter/application/http"
-	infraHTTP "github.com/diegodesousas/apistarter/application/http"
+	appHTTP "github.com/diegodesousas/apistarter/application/http"
 )
 
-var Routes = []infraHTTP.Route{
+var Routes = []appHTTP.Route{
 	{
 		Path:        "/tickets/:id",
 		Method:      http.MethodGet,
 		Handler:     FindTicketByIdHandler,
-		Middlewares: infraHTTP.Middlewares(ErrorMiddleware, RequestIDMiddleware),
+		Middlewares: appHTTP.Middlewares(ErrorMiddleware, RequestIDMiddleware),
 	},
 	{
 		Path:    "/tickets",

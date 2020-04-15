@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/diegodesousas/apistarter/application/database"
-	infraHTTP "github.com/diegodesousas/apistarter/application/http"
+	appHTTP "github.com/diegodesousas/apistarter/application/http"
 	"github.com/diegodesousas/apistarter/core/di"
 	"github.com/diegodesousas/apistarter/core/ticket"
 	"github.com/julienschmidt/httprouter"
@@ -14,13 +14,13 @@ import (
 var (
 	FindTicketByIdHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
 		if err := FindTicketById(w, r, container.NewTicketService()); err != nil {
-			infraHTTP.ErrorHandler(w, err)
+			appHTTP.ErrorHandler(w, err)
 		}
 	}
 	CreateTicketHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
 		conn, err := container.NewConn()
 		if err != nil {
-			infraHTTP.ErrorHandler(w, err)
+			appHTTP.ErrorHandler(w, err)
 			return
 		}
 
@@ -28,7 +28,7 @@ var (
 			err := CreateTicket(w, r, container.NewTxlTicketService(tx))
 
 			if err != nil {
-				infraHTTP.ErrorHandler(w, err)
+				appHTTP.ErrorHandler(w, err)
 				return err
 			}
 
@@ -36,7 +36,7 @@ var (
 		})
 
 		if err != nil {
-			infraHTTP.ErrorHandler(w, err)
+			appHTTP.ErrorHandler(w, err)
 		}
 	}
 )
