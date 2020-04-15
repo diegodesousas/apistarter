@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/application/database"
+	"github.com/diegodesousas/apistarter/app/database"
 	"github.com/diegodesousas/apistarter/core/di"
 	"github.com/diegodesousas/apistarter/core/ticket"
 	"github.com/julienschmidt/httprouter"

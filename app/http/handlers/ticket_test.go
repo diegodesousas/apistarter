@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/diegodesousas/apistarter/application/database"
-	"github.com/diegodesousas/apistarter/application/http/handlers"
+	"github.com/diegodesousas/apistarter/app/database"
+	"github.com/diegodesousas/apistarter/app/http/handlers"
 	"github.com/diegodesousas/apistarter/core/media"
 	"github.com/diegodesousas/apistarter/core/ticket"
 	"github.com/diegodesousas/apistarter/test/container"
@@ -75,9 +75,9 @@ func TestFindByIdShouldReturnInternalServerError(t *testing.T) {
 	}
 
 	response := httptest.NewRecorder()
-	handlers.FindTicketByIdHandler(response, request, mockContainer)
-	assert.Equal(t, http.StatusInternalServerError, response.Code)
-	assert.Equal(t, http.StatusText(http.StatusInternalServerError)+"\n", response.Body.String())
+	err = handlers.FindTicketByIdHandler(response, request, mockContainer)
+	assert.NotNil(t, err)
+	assert.Equal(t, err.Error(), "unknown error")
 }
 
 func TestFindByIdShouldReturnNotFound(t *testing.T) {
@@ -99,9 +99,9 @@ func TestFindByIdShouldReturnNotFound(t *testing.T) {
 	}
 
 	response := httptest.NewRecorder()
-	handlers.FindTicketByIdHandler(response, request, mockContainer)
-	assert.Equal(t, http.StatusNotFound, response.Code)
-	assert.Equal(t, http.StatusText(http.StatusNotFound)+"\n", response.Body.String())
+	err = handlers.FindTicketByIdHandler(response, request, mockContainer)
+	assert.NotNil(t, err)
+	assert.Equal(t, err.Error(), "entity not found")
 }
 
 func TestCreateTicketShouldReturnSuccess(t *testing.T) {
@@ -183,8 +183,11 @@ func TestCreateTicketHandlerShouldReturnSuccess(t *testing.T) {
 	mockContainer := container.MockContainer{
 		MockTxTicketService: mockTicketService,
 		MockTxMediaService:  mockTxMediaService,
-		MockNewConn: func() (conn database.Conn, err error) {
-			return testDatabase.SuccessTransaction, nil
+	}
+
+	mockTx := testDatabase.MockTxConn{
+		MockCommit: func() error {
+			return nil
 		},
 	}
 
@@ -205,7 +208,8 @@ func TestCreateTicketHandlerShouldReturnSuccess(t *testing.T) {
 	assert.Nil(t, err)
 
 	response := httptest.NewRecorder()
-	handlers.CreateTicketHandler(response, request, mockContainer)
+	err = handlers.CreateTicketHandler(response, request, mockTx, mockContainer)
+	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, response.Code)
 
 	bytes, err := json.Marshal(expectedTicket)

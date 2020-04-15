@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/diegodesousas/apistarter/application/database"
+	"github.com/diegodesousas/apistarter/app/database"
 )
 
 type TxService interface {

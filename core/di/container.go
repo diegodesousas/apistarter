@@ -1,7 +1,7 @@
 package di
 
 import (
-	"github.com/diegodesousas/apistarter/application/database"
+	"github.com/diegodesousas/apistarter/app/database"
 	"github.com/diegodesousas/apistarter/core/media"
 	"github.com/diegodesousas/apistarter/core/ticket"
 )

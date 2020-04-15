@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	appHTTP "github.com/diegodesousas/apistarter/application/http"
+	appHTTP "github.com/diegodesousas/apistarter/app/http"
 )
 
 var Routes = []appHTTP.Route{

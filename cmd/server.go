@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/diegodesousas/apistarter/application/http"
-	"github.com/diegodesousas/apistarter/application/http/handlers"
+	"github.com/diegodesousas/apistarter/app/http"
+	"github.com/diegodesousas/apistarter/app/http/handlers"
 	"github.com/diegodesousas/apistarter/core/di"
 )
 

@@ -3,7 +3,7 @@ package http
 import (
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/application/database"
+	"github.com/diegodesousas/apistarter/app/database"
 )
 
 type Error struct {
@@ -23,9 +23,9 @@ func httpStatusCode(err error) Error {
 	switch err {
 	case database.NotFound:
 		return NewHTTPError(err, http.StatusNotFound)
+	default:
+		return NewHTTPError(err, http.StatusInternalServerError)
 	}
-
-	return NewHTTPError(err, http.StatusInternalServerError)
 }
 
 func ErrorHandler(w http.ResponseWriter, err error) {

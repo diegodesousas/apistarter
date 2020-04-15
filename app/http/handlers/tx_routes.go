@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	appHttp "github.com/diegodesousas/apistarter/application/http"
+	appHttp "github.com/diegodesousas/apistarter/app/http"
 )
 
 var TxRoutes = []appHttp.TxRoute{
