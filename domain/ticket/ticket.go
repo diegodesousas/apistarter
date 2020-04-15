@@ -1,6 +1,6 @@
 package ticket
 
-import "github.com/diegodesousas/apistarter/media"
+import "github.com/diegodesousas/apistarter/domain/media"
 
 type Ticket struct {
 	ID     int64         `json:"id" db:"id"`

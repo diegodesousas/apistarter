@@ -1,35 +1,42 @@
-package ticket
+package handlers
 
 import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/database"
-	"github.com/diegodesousas/apistarter/di"
-	"github.com/diegodesousas/apistarter/errorhandler"
-	"github.com/diegodesousas/apistarter/ticket"
+	"github.com/diegodesousas/apistarter/domain/di"
+	"github.com/diegodesousas/apistarter/domain/ticket"
+	"github.com/diegodesousas/apistarter/infra/database"
+	infraHTTP "github.com/diegodesousas/apistarter/infra/http"
 	"github.com/julienschmidt/httprouter"
 )
 
 var (
-	FindByIdHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
-		if err := FindById(w, r, container.NewTicketService()); err != nil {
-			errorhandler.HttpHandler(w, err)
+	FindTicketByIdHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
+		if err := FindTicketById(w, r, container.NewTicketService()); err != nil {
+			infraHTTP.ErrorHandler(w, err)
 		}
 	}
 	CreateTicketHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
 		conn, err := container.NewConn()
 		if err != nil {
-			errorhandler.HttpHandler(w, err)
+			infraHTTP.ErrorHandler(w, err)
 			return
 		}
 
 		err = conn.Transaction(func(tx database.TxConn) error {
-			return CreateTicket(w, r, container.NewTxlTicketService(tx))
+			err := CreateTicket(w, r, container.NewTxlTicketService(tx))
+
+			if err != nil {
+				infraHTTP.ErrorHandler(w, err)
+				return err
+			}
+
+			return nil
 		})
 
 		if err != nil {
-			errorhandler.HttpHandler(w, err)
+			infraHTTP.ErrorHandler(w, err)
 		}
 	}
 )
@@ -55,7 +62,7 @@ func CreateTicket(w http.ResponseWriter, r *http.Request, service ticket.TxServi
 	return nil
 }
 
-func FindById(w http.ResponseWriter, req *http.Request, service ticket.Service) error {
+func FindTicketById(w http.ResponseWriter, req *http.Request, service ticket.Service) error {
 	ctx := req.Context()
 	id := httprouter.ParamsFromContext(ctx).ByName("id")
 

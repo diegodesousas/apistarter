@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/diegodesousas/apistarter/database"
+	"github.com/diegodesousas/apistarter/infra/database"
 )
 
 type MockTxConn struct {

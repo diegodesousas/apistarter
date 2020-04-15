@@ -1,10 +1,10 @@
-package router
+package http
 
 import (
 	"log"
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/di"
+	"github.com/diegodesousas/apistarter/domain/di"
 	"github.com/justinas/alice"
 )
 

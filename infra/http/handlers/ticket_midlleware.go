@@ -1,10 +1,10 @@
-package ticket
+package handlers
 
 import (
 	"log"
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/di"
+	"github.com/diegodesousas/apistarter/domain/di"
 )
 
 var (

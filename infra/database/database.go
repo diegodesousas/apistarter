@@ -34,10 +34,10 @@ func (db Database) Transaction(f func(TxConn) error) error {
 	}
 
 	if err = f(tx); err != nil {
-		return tx.Commit()
+		return tx.Rollback()
 	}
 
-	return tx.Rollback()
+	return tx.Commit()
 }
 
 func (db Database) Begin() (TxConn, error) {

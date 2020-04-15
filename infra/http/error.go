@@ -1,25 +1,25 @@
-package errorhandler
+package http
 
 import (
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/database"
+	"github.com/diegodesousas/apistarter/infra/database"
 )
 
-type HTTPError struct {
+type Error struct {
 	Err        error
 	StatusCode int
 }
 
-func (e HTTPError) Error() string {
+func (e Error) Error() string {
 	return http.StatusText(e.StatusCode)
 }
 
-func NewHTTPError(err error, statusCode int) HTTPError {
-	return HTTPError{Err: err, StatusCode: statusCode}
+func NewHTTPError(err error, statusCode int) Error {
+	return Error{Err: err, StatusCode: statusCode}
 }
 
-func httpStatusCode(err error) HTTPError {
+func httpStatusCode(err error) Error {
 	switch err {
 	case database.NotFound:
 		return NewHTTPError(err, http.StatusNotFound)
@@ -28,7 +28,7 @@ func httpStatusCode(err error) HTTPError {
 	return NewHTTPError(err, http.StatusInternalServerError)
 }
 
-func HttpHandler(w http.ResponseWriter, err error) {
+func ErrorHandler(w http.ResponseWriter, err error) {
 	httpError := httpStatusCode(err)
 	http.Error(w, httpError.Error(), httpError.StatusCode)
 }

@@ -3,7 +3,7 @@ package database
 import (
 	"context"
 
-	"github.com/diegodesousas/apistarter/database"
+	"github.com/diegodesousas/apistarter/infra/database"
 )
 
 type MockConn struct {

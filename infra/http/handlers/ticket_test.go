@@ -1,4 +1,4 @@
-package ticket_test
+package handlers_test
 
 import (
 	"context"
@@ -9,14 +9,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/diegodesousas/apistarter/database"
-	handler "github.com/diegodesousas/apistarter/handlers/ticket"
-	"github.com/diegodesousas/apistarter/media"
+	"github.com/diegodesousas/apistarter/domain/media"
+	"github.com/diegodesousas/apistarter/domain/ticket"
+	"github.com/diegodesousas/apistarter/infra/database"
+	"github.com/diegodesousas/apistarter/infra/http/handlers"
 	"github.com/diegodesousas/apistarter/test/container"
 	testDatabase "github.com/diegodesousas/apistarter/test/database"
 	testMedia "github.com/diegodesousas/apistarter/test/media"
 	testTicket "github.com/diegodesousas/apistarter/test/ticket"
-	"github.com/diegodesousas/apistarter/ticket"
 	"github.com/julienschmidt/httprouter"
 	"github.com/stretchr/testify/assert"
 )
@@ -46,7 +46,7 @@ func TestFindByIdShouldReturnSuccess(t *testing.T) {
 	}
 
 	response := httptest.NewRecorder()
-	err = handler.FindById(response, request, mockService)
+	err = handlers.FindTicketById(response, request, mockService)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, response.Code)
 
@@ -75,7 +75,7 @@ func TestFindByIdShouldReturnInternalServerError(t *testing.T) {
 	}
 
 	response := httptest.NewRecorder()
-	handler.FindByIdHandler(response, request, mockContainer)
+	handlers.FindTicketByIdHandler(response, request, mockContainer)
 	assert.Equal(t, http.StatusInternalServerError, response.Code)
 	assert.Equal(t, http.StatusText(http.StatusInternalServerError)+"\n", response.Body.String())
 }
@@ -99,7 +99,7 @@ func TestFindByIdShouldReturnNotFound(t *testing.T) {
 	}
 
 	response := httptest.NewRecorder()
-	handler.FindByIdHandler(response, request, mockContainer)
+	handlers.FindTicketByIdHandler(response, request, mockContainer)
 	assert.Equal(t, http.StatusNotFound, response.Code)
 	assert.Equal(t, http.StatusText(http.StatusNotFound)+"\n", response.Body.String())
 }
@@ -145,7 +145,7 @@ func TestCreateTicketShouldReturnSuccess(t *testing.T) {
 	assert.Nil(t, err)
 
 	response := httptest.NewRecorder()
-	err = handler.CreateTicket(response, request, mockTxService)
+	err = handlers.CreateTicket(response, request, mockTxService)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, response.Code)
 
@@ -205,7 +205,7 @@ func TestCreateTicketHandlerShouldReturnSuccess(t *testing.T) {
 	assert.Nil(t, err)
 
 	response := httptest.NewRecorder()
-	handler.CreateTicketHandler(response, request, mockContainer)
+	handlers.CreateTicketHandler(response, request, mockContainer)
 	assert.Equal(t, http.StatusOK, response.Code)
 
 	bytes, err := json.Marshal(expectedTicket)

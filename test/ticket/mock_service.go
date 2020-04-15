@@ -3,7 +3,7 @@ package ticket
 import (
 	"context"
 
-	"github.com/diegodesousas/apistarter/ticket"
+	"github.com/diegodesousas/apistarter/domain/ticket"
 )
 
 type MockService struct {

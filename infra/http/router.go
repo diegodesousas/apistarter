@@ -1,9 +1,9 @@
-package router
+package http
 
 import (
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/di"
+	"github.com/diegodesousas/apistarter/domain/di"
 	"github.com/julienschmidt/httprouter"
 	"github.com/justinas/alice"
 )
@@ -12,9 +12,10 @@ type Router struct {
 	router      *httprouter.Router
 	container   di.Container
 	middlewares []Middleware
+	handler     http.Handler
 }
 
-func New(configs ...ConfigRouter) Router {
+func NewRouter(configs ...RouterConfig) Router {
 	router := &Router{
 		router: httprouter.New(),
 	}
@@ -22,6 +23,10 @@ func New(configs ...ConfigRouter) Router {
 	for _, config := range configs {
 		config(router)
 	}
+
+	router.handler = alice.
+		New(buildMiddlewares(router.container, router.middlewares...)...).
+		Then(router.router)
 
 	return *router
 }
@@ -41,10 +46,7 @@ func (r Router) AddRoute(route Route) {
 }
 
 func (r Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	alice.
-		New(buildMiddlewares(r.container, r.middlewares...)...).
-		Then(r.router).
-		ServeHTTP(w, req)
+	r.handler.ServeHTTP(w, req)
 }
 
 func buildMiddlewares(container di.Container, middlewares ...Middleware) []alice.Constructor {

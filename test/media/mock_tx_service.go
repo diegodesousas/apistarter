@@ -3,7 +3,7 @@ package media
 import (
 	"context"
 
-	"github.com/diegodesousas/apistarter/media"
+	"github.com/diegodesousas/apistarter/domain/media"
 )
 
 type MockTxMediaService struct {

@@ -1,4 +1,4 @@
-package server
+package http
 
 import (
 	"log"
@@ -9,7 +9,7 @@ type Server struct {
 	server http.Server
 }
 
-func New(configs ...ConfigServer) Server {
+func NewServer(configs ...ServerConfig) Server {
 	s := &Server{
 		server: http.Server{
 			Addr: ":8080",
