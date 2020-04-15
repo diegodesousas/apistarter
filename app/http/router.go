@@ -41,37 +41,37 @@ func (r Router) addHandler(method string, path string, middlewares []Middleware,
 }
 
 func (r Router) AddRoute(route Route) {
-	main := func(w http.ResponseWriter, req *http.Request) {
-		if err := route.Handler(w, req, r.container); err != nil {
-			ErrorHandler(w, err)
-		}
-	}
-
-	r.addHandler(route.Method, route.Path, route.Middlewares, main)
+	r.addHandler(
+		route.Method,
+		route.Path,
+		route.Middlewares,
+		func(w http.ResponseWriter, req *http.Request) {
+			if err := route.Handler(w, req, r.container); err != nil {
+				ErrorHandler(w, err)
+			}
+		})
 }
 
 func (r Router) AddTxRoute(route TxRoute) {
-	main := func(w http.ResponseWriter, req *http.Request) {
-		conn, err := r.container.NewConn()
-		if err != nil {
-			ErrorHandler(w, err)
-			return
-		}
+	r.addHandler(
+		route.Method,
+		route.Path,
+		route.Middlewares,
+		func(w http.ResponseWriter, req *http.Request) {
+			conn, err := r.container.NewConn()
+			if err != nil {
+				ErrorHandler(w, err)
+				return
+			}
 
-		err = conn.Transaction(func(tx database.TxConn) error {
-			return route.Handler(w, req, tx, r.container)
+			err = conn.Transaction(func(tx database.TxConn) error {
+				return route.Handler(w, req, tx, r.container)
+			})
+
+			if err != nil {
+				ErrorHandler(w, err)
+			}
 		})
-
-		if err != nil {
-			ErrorHandler(w, err)
-		}
-	}
-
-	r.addHandler(route.Method, route.Path, route.Middlewares, main)
-}
-
-func (r Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	r.handler.ServeHTTP(w, req)
 }
 
 func buildMiddlewares(container di.Container, middlewares ...Middleware) []alice.Constructor {
@@ -80,4 +80,8 @@ func buildMiddlewares(container di.Container, middlewares ...Middleware) []alice
 		list = append(list, middleware.Build(container))
 	}
 	return list
+}
+
+func (r Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	r.handler.ServeHTTP(w, req)
 }
