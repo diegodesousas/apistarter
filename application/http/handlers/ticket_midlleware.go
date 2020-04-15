@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/domain/di"
+	"github.com/diegodesousas/apistarter/core/di"
 )
 
 var (

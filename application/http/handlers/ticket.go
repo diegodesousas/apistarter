@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/domain/di"
-	"github.com/diegodesousas/apistarter/domain/ticket"
-	"github.com/diegodesousas/apistarter/infra/database"
-	infraHTTP "github.com/diegodesousas/apistarter/infra/http"
+	"github.com/diegodesousas/apistarter/application/database"
+	infraHTTP "github.com/diegodesousas/apistarter/application/http"
+	"github.com/diegodesousas/apistarter/core/di"
+	"github.com/diegodesousas/apistarter/core/ticket"
 	"github.com/julienschmidt/httprouter"
 )
 

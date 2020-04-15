@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 
-	_ "github.com/diegodesousas/apistarter/infra/http"
-	infraHTTP "github.com/diegodesousas/apistarter/infra/http"
+	_ "github.com/diegodesousas/apistarter/application/http"
+	infraHTTP "github.com/diegodesousas/apistarter/application/http"
 )
 
 var Routes = []infraHTTP.Route{

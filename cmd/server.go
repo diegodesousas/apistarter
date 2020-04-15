@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/diegodesousas/apistarter/domain/di"
-	"github.com/diegodesousas/apistarter/infra/http"
-	"github.com/diegodesousas/apistarter/infra/http/handlers"
+	"github.com/diegodesousas/apistarter/application/http"
+	"github.com/diegodesousas/apistarter/application/http/handlers"
+	"github.com/diegodesousas/apistarter/core/di"
 )
 
 func main() {
