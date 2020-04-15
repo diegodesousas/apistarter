@@ -88,7 +88,7 @@ func TestFindByIdShouldReturnNotFound(t *testing.T) {
 
 	mockTicketService := testTicket.MockService{
 		FindByIdMocked: func(ctx context.Context, s string) (t *ticket.Ticket, err error) {
-			return nil, database.NotFound
+			return nil, database.NewNotFoundErr()
 		},
 	}
 	mockMediaService := testMedia.MockMediaService{}

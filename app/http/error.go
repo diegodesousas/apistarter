@@ -20,8 +20,8 @@ func NewHTTPError(err error, statusCode int) Error {
 }
 
 func httpStatusCode(err error) Error {
-	switch err {
-	case database.NotFound:
+	switch err.(type) {
+	case database.NotFoundErr:
 		return NewHTTPError(err, http.StatusNotFound)
 	default:
 		return NewHTTPError(err, http.StatusInternalServerError)
