@@ -13,9 +13,4 @@ var Routes = []appHTTP.Route{
 		Handler:     FindTicketByIdHandler,
 		Middlewares: appHTTP.Middlewares(ErrorMiddleware, RequestIDMiddleware),
 	},
-	{
-		Path:    "/tickets",
-		Method:  http.MethodPost,
-		Handler: CreateTicketHandler,
-	},
 }

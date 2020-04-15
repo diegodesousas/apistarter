@@ -17,6 +17,7 @@ func main() {
 	r := http.NewRouter(
 		http.WithContainer(container),
 		http.WithRoutes(handlers.Routes...),
+		http.WithTxRoutes(handlers.TxRoutes...),
 		http.WithMiddleware(http.GlobalMiddleware),
 	)
 

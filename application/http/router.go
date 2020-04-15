@@ -3,6 +3,7 @@ package http
 import (
 	"net/http"
 
+	"github.com/diegodesousas/apistarter/application/database"
 	"github.com/diegodesousas/apistarter/core/di"
 	"github.com/julienschmidt/httprouter"
 	"github.com/justinas/alice"
@@ -31,18 +32,42 @@ func NewRouter(configs ...RouterConfig) Router {
 	return *router
 }
 
+func (r Router) addHandler(method string, path string, middlewares []Middleware, handler http.HandlerFunc) {
+	r.router.Handler(
+		method,
+		path,
+		alice.New(buildMiddlewares(r.container, middlewares...)...).ThenFunc(handler),
+	)
+}
+
 func (r Router) AddRoute(route Route) {
 	main := func(w http.ResponseWriter, req *http.Request) {
-		route.Handler(w, req, r.container)
+		if err := route.Handler(w, req, r.container); err != nil {
+			ErrorHandler(w, err)
+		}
 	}
 
-	middlewares := buildMiddlewares(r.container, route.Middlewares...)
+	r.addHandler(route.Method, route.Path, route.Middlewares, main)
+}
 
-	r.router.Handler(
-		route.Method,
-		route.Path,
-		alice.New(middlewares...).ThenFunc(main),
-	)
+func (r Router) AddTxRoute(route TxRoute) {
+	main := func(w http.ResponseWriter, req *http.Request) {
+		conn, err := r.container.NewConn()
+		if err != nil {
+			ErrorHandler(w, err)
+			return
+		}
+
+		err = conn.Transaction(func(tx database.TxConn) error {
+			return route.Handler(w, req, tx, r.container)
+		})
+
+		if err != nil {
+			ErrorHandler(w, err)
+		}
+	}
+
+	r.addHandler(route.Method, route.Path, route.Middlewares, main)
 }
 
 func (r Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {

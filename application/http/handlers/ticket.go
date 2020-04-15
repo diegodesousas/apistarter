@@ -5,39 +5,17 @@ import (
 	"net/http"
 
 	"github.com/diegodesousas/apistarter/application/database"
-	appHTTP "github.com/diegodesousas/apistarter/application/http"
 	"github.com/diegodesousas/apistarter/core/di"
 	"github.com/diegodesousas/apistarter/core/ticket"
 	"github.com/julienschmidt/httprouter"
 )
 
 var (
-	FindTicketByIdHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
-		if err := FindTicketById(w, r, container.NewTicketService()); err != nil {
-			appHTTP.ErrorHandler(w, err)
-		}
+	FindTicketByIdHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) error {
+		return FindTicketById(w, r, container.NewTicketService())
 	}
-	CreateTicketHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) {
-		conn, err := container.NewConn()
-		if err != nil {
-			appHTTP.ErrorHandler(w, err)
-			return
-		}
-
-		err = conn.Transaction(func(tx database.TxConn) error {
-			err := CreateTicket(w, r, container.NewTxlTicketService(tx))
-
-			if err != nil {
-				appHTTP.ErrorHandler(w, err)
-				return err
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			appHTTP.ErrorHandler(w, err)
-		}
+	CreateTicketHandler = func(w http.ResponseWriter, r *http.Request, tx database.TxConn, container di.Container) error {
+		return CreateTicket(w, r, container.NewTxlTicketService(tx))
 	}
 )
 

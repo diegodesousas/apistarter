@@ -12,6 +12,13 @@ var (
 			}
 		}
 	}
+	WithTxRoutes = func(routes ...TxRoute) RouterConfig {
+		return func(router *Router) {
+			for _, route := range routes {
+				router.AddTxRoute(route)
+			}
+		}
+	}
 	WithContainer = func(container di.Container) RouterConfig {
 		return func(router *Router) {
 			router.container = container
