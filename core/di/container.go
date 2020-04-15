@@ -1,6 +1,7 @@
 package di
 
 import (
+	"github.com/diegodesousas/apistarter/app/config"
 	"github.com/diegodesousas/apistarter/app/database"
 	"github.com/diegodesousas/apistarter/core/media"
 	"github.com/diegodesousas/apistarter/core/ticket"
@@ -15,7 +16,8 @@ type Container interface {
 }
 
 type container struct {
-	conn database.Conn
+	conn   database.Conn
+	config *config.Config
 }
 
 func (c container) NewTxConn() (database.TxConn, error) {
@@ -23,7 +25,7 @@ func (c container) NewTxConn() (database.TxConn, error) {
 }
 
 func (c container) NewConn() (database.Conn, error) {
-	return database.New("postgres", "postgres://postgres:root@postgres11.hud:5432/apistarter?sslmode=disable")
+	return database.New(c.config.Database.Driver, c.config.Database.DSN)
 }
 
 func (c container) NewTxMediaService(tx database.TxConn) media.TxService {
@@ -42,8 +44,10 @@ func (c container) NewTicketService() ticket.Service {
 	return ticket.NewService(c.conn, c.NewMediaService(c.conn))
 }
 
-func NewContainer() (*container, error) {
-	c := &container{}
+func NewContainer(cfg *config.Config) (*container, error) {
+	c := &container{
+		config: cfg,
+	}
 	conn, err := c.NewConn()
 	if err != nil {
 		return nil, err

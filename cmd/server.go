@@ -3,13 +3,19 @@ package main
 import (
 	"log"
 
+	"github.com/diegodesousas/apistarter/app/config"
 	"github.com/diegodesousas/apistarter/app/http"
 	"github.com/diegodesousas/apistarter/app/http/handlers"
 	"github.com/diegodesousas/apistarter/core/di"
 )
 
 func main() {
-	container, err := di.NewContainer()
+	cfg, err := config.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	container, err := di.NewContainer(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
