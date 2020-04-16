@@ -1,7 +1,6 @@
 package http
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/diegodesousas/apistarter/core/di"
@@ -11,12 +10,6 @@ import (
 var (
 	Middlewares = func(middlewares ...Middleware) []Middleware {
 		return append([]Middleware{}, middlewares...)
-	}
-	GlobalMiddleware = func(container di.Container, next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			log.Println("Global Middleware.")
-			next.ServeHTTP(w, req)
-		})
 	}
 )
 
