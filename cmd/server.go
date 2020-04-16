@@ -5,6 +5,7 @@ import (
 
 	"github.com/diegodesousas/apistarter/app/config"
 	"github.com/diegodesousas/apistarter/app/http"
+	"github.com/diegodesousas/apistarter/app/http/middlewares"
 	"github.com/diegodesousas/apistarter/core/di"
 )
 
@@ -23,7 +24,7 @@ func main() {
 		http.WithContainer(container),
 		http.WithRoutes(http.Routes...),
 		http.WithTxRoutes(http.TxRoutes...),
-		http.WithMiddleware(http.GlobalMiddleware),
+		http.WithMiddleware(middlewares.GlobalMiddleware),
 	)
 
 	s := http.NewServer(
