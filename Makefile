@@ -23,12 +23,16 @@ test:
 	@$(MAKE) CMD="go test -coverprofile=coverage.out -race ./..." docker
 
 coverage:
-	@$(MAKE) CMD="go tool cover -html=coverage.out  -o coverage.html"
+	@$(MAKE) CMD="go tool cover -html=coverage.out -o coverage.html"
 
 sh:
 	@$(MAKE) docker
 
-run:
+build-app:
+	go mod vendor
+	go build cmd/server.go
+
+watch:
 	@$(MAKE) CMD="dogo" docker
 
 build:

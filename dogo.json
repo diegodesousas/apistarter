@@ -7,7 +7,7 @@
     "{GOPATH}/src/github.com/diegodesousas/apistarter/test"
   ],
   "SourceExt": [".go"],
-  "BuildCmd": "go build cmd/server.go",
+  "BuildCmd": "make build-app",
   "RunCmd": "server",
   "Decreasing": 1
 }
