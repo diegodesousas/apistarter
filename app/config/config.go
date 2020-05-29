@@ -16,6 +16,9 @@ type Config struct {
 }
 
 func New() (*Config, error) {
+	viper.SetDefault("DATABASE_DRIVER", "postgres")
+	viper.SetDefault("DATABASE_DSN", "postgres://postgres:root@postgres11.hud:5432/apistarter?sslmode=disable")
+
 	viper.SetConfigType("env")
 	viper.SetConfigFile(".env")
 	viper.AutomaticEnv()

@@ -1,8 +1,11 @@
 package http
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/spf13/viper"
 )
 
 type Server struct {
@@ -12,7 +15,7 @@ type Server struct {
 func NewServer(configs ...ServerConfig) Server {
 	s := &Server{
 		server: http.Server{
-			Addr: ":8080",
+			Addr: fmt.Sprintf(":%s", viper.GetString("HTTP_PORT")),
 		},
 	}
 
