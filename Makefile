@@ -70,7 +70,7 @@ shell:
 
 build-app:
 	go mod vendor
-	go build cmd/server.go
+	go build main.go
 
 watch:
 	@docker run \

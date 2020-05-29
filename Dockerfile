@@ -9,7 +9,7 @@ RUN go get github.com/liudng/dogo
 FROM base AS compiler
 COPY . ./
 RUN go mod vendor
-RUN CGO_ENABLED=0 GOARCH=amd64 go build -o /apistarter/bin /go/src/github.com/diegodesousas/apistarter/cmd
+RUN CGO_ENABLED=0 GOARCH=amd64 go build -o /apistarter/bin /go/src/github.com/diegodesousas/apistarter
 
 FROM alpine:3.10 AS release
 RUN apk add --update --no-cache ca-certificates tzdata && \
