@@ -14,4 +14,9 @@ var Routes = []Route{
 		Handler:     handlers.FindTicketByIdHandler,
 		Middlewares: Middlewares(middlewares.ErrorMiddleware, middlewares.RequestIDMiddleware),
 	},
+	{
+		Path:    "/healthcheck",
+		Method:  http.MethodGet,
+		Handler: handlers.Healthcheck,
+	},
 }
