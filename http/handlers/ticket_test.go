@@ -9,14 +9,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/diegodesousas/apistarter/app/database"
-	"github.com/diegodesousas/apistarter/app/http/handlers"
-	"github.com/diegodesousas/apistarter/core/media"
-	"github.com/diegodesousas/apistarter/core/ticket"
+	"github.com/diegodesousas/apistarter/database"
+	"github.com/diegodesousas/apistarter/http/handlers"
+	"github.com/diegodesousas/apistarter/media"
 	"github.com/diegodesousas/apistarter/test/container"
 	testDatabase "github.com/diegodesousas/apistarter/test/database"
 	testMedia "github.com/diegodesousas/apistarter/test/media"
 	testTicket "github.com/diegodesousas/apistarter/test/ticket"
+	"github.com/diegodesousas/apistarter/ticket"
 	"github.com/julienschmidt/httprouter"
 	"github.com/stretchr/testify/assert"
 )

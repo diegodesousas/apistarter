@@ -3,8 +3,8 @@ package http
 import (
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/app/database"
-	"github.com/diegodesousas/apistarter/core/di"
+	"github.com/diegodesousas/apistarter/database"
+	"github.com/diegodesousas/apistarter/di"
 	"github.com/julienschmidt/httprouter"
 	"github.com/justinas/alice"
 )

@@ -3,7 +3,7 @@ package http
 import (
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/app/http/handlers"
+	"github.com/diegodesousas/apistarter/http/handlers"
 )
 
 var TxRoutes = []TxRoute{

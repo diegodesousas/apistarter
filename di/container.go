@@ -1,10 +1,10 @@
 package di
 
 import (
-	"github.com/diegodesousas/apistarter/app/config"
-	"github.com/diegodesousas/apistarter/app/database"
-	"github.com/diegodesousas/apistarter/core/media"
-	"github.com/diegodesousas/apistarter/core/ticket"
+	"github.com/diegodesousas/apistarter/config"
+	"github.com/diegodesousas/apistarter/database"
+	"github.com/diegodesousas/apistarter/media"
+	"github.com/diegodesousas/apistarter/ticket"
 )
 
 type Container interface {

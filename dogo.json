@@ -1,9 +1,7 @@
 {
   "WorkingDir": "{GOPATH}/src/github.com/diegodesousas/apistarter",
   "SourceDir": [
-    "{GOPATH}/src/github.com/diegodesousas/apistarter/app",
-    "{GOPATH}/src/github.com/diegodesousas/apistarter/core",
-    "{GOPATH}/src/github.com/diegodesousas/apistarter/test"
+    "{GOPATH}/src/github.com/diegodesousas/apistarter"
   ],
   "SourceExt": [".go"],
   "BuildCmd": "make build-app",

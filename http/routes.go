@@ -3,8 +3,8 @@ package http
 import (
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/app/http/handlers"
-	"github.com/diegodesousas/apistarter/app/http/middlewares"
+	"github.com/diegodesousas/apistarter/http/handlers"
+	"github.com/diegodesousas/apistarter/http/middlewares"
 )
 
 var Routes = []Route{

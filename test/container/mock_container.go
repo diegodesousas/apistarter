@@ -1,11 +1,11 @@
 package container
 
 import (
-	"github.com/diegodesousas/apistarter/app/database"
-	"github.com/diegodesousas/apistarter/core/media"
-	"github.com/diegodesousas/apistarter/core/ticket"
+	"github.com/diegodesousas/apistarter/database"
+	"github.com/diegodesousas/apistarter/media"
 	testMedia "github.com/diegodesousas/apistarter/test/media"
 	testTicket "github.com/diegodesousas/apistarter/test/ticket"
+	"github.com/diegodesousas/apistarter/ticket"
 )
 
 type MockContainer struct {

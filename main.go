@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 
-	"github.com/diegodesousas/apistarter/app/config"
-	"github.com/diegodesousas/apistarter/app/http"
-	"github.com/diegodesousas/apistarter/app/http/middlewares"
-	"github.com/diegodesousas/apistarter/core/di"
+	"github.com/diegodesousas/apistarter/config"
+	"github.com/diegodesousas/apistarter/di"
+	"github.com/diegodesousas/apistarter/http"
+	"github.com/diegodesousas/apistarter/http/middlewares"
 )
 
 func main() {

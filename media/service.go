@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/diegodesousas/apistarter/app/database"
+	"github.com/diegodesousas/apistarter/database"
 )
 
 type Service interface {
