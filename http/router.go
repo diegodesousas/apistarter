@@ -3,8 +3,8 @@ package http
 import (
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/app/database"
-	"github.com/diegodesousas/apistarter/core/di"
+	"github.com/diegodesousas/apistarter/database"
+	"github.com/diegodesousas/apistarter/di"
 	"github.com/julienschmidt/httprouter"
 	"github.com/justinas/alice"
 )
@@ -65,7 +65,11 @@ func (r Router) AddTxRoute(route TxRoute) {
 			}
 
 			err = conn.Transaction(func(tx database.TxConn) error {
-				return route.Handler(w, req, tx, r.container)
+				if err := route.Handler(w, req, tx, r.container); err != nil {
+					ErrorHandler(w, err)
+				}
+
+				return nil
 			})
 
 			if err != nil {

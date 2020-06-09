@@ -1,6 +1,6 @@
 package http
 
-import "github.com/diegodesousas/apistarter/core/di"
+import "github.com/diegodesousas/apistarter/di"
 
 type RouterConfig func(*Router)
 

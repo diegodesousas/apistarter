@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/core/di"
+	"github.com/diegodesousas/apistarter/di"
 )
 
 func Healthcheck(w http.ResponseWriter, _ *http.Request, _ di.Container) error {

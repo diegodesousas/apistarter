@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/diegodesousas/apistarter/app/database"
-	"github.com/diegodesousas/apistarter/core/media"
+	"github.com/diegodesousas/apistarter/database"
+	"github.com/diegodesousas/apistarter/media"
 )
 
 type TxService interface {

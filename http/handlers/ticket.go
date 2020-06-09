@@ -4,15 +4,15 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/app/database"
-	"github.com/diegodesousas/apistarter/core/di"
-	"github.com/diegodesousas/apistarter/core/ticket"
+	"github.com/diegodesousas/apistarter/database"
+	"github.com/diegodesousas/apistarter/di"
+	"github.com/diegodesousas/apistarter/ticket"
 	"github.com/julienschmidt/httprouter"
 )
 
 var (
-	FindTicketByIdHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) error {
-		return FindTicketById(w, r, container.NewTicketService())
+	FindTicketByIdHandler = func(w http.ResponseWriter, r *http.Request, tx database.TxConn, container di.Container) error {
+		return FindTicketById(w, r, container.NewTicketService(container.NewTicketStorage(tx)))
 	}
 	CreateTicketHandler = func(w http.ResponseWriter, r *http.Request, tx database.TxConn, container di.Container) error {
 		return CreateTicket(w, r, container.NewTxlTicketService(tx))

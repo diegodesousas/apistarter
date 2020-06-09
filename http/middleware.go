@@ -3,7 +3,7 @@ package http
 import (
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/core/di"
+	"github.com/diegodesousas/apistarter/di"
 	"github.com/justinas/alice"
 )
 

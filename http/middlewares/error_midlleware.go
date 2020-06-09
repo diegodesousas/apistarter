@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/core/di"
+	"github.com/diegodesousas/apistarter/di"
 )
 
 var ErrorMiddleware = func(container di.Container, next http.Handler) http.Handler {

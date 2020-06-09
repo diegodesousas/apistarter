@@ -3,7 +3,7 @@ package http
 import (
 	"net/http"
 
-	"github.com/diegodesousas/apistarter/app/database"
+	"github.com/diegodesousas/apistarter/database"
 )
 
 type Error struct {
