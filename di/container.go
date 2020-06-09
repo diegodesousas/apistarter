@@ -3,7 +3,6 @@ package di
 import (
 	"github.com/diegodesousas/apistarter/config"
 	"github.com/diegodesousas/apistarter/database"
-	"github.com/diegodesousas/apistarter/media"
 	"github.com/diegodesousas/apistarter/services"
 	"github.com/diegodesousas/apistarter/storage"
 	"github.com/diegodesousas/apistarter/ticket"
@@ -11,8 +10,6 @@ import (
 
 type Container interface {
 	NewTicketService(ticket.Storage) ticket.Service
-	NewMediaService(database.Conn) media.Service
-	NewTxMediaService(database.TxConn) media.TxService
 	NewTicketStorage(database.TxConn) ticket.Storage
 	NewConn() (database.Conn, error)
 	NewTxConn() (database.TxConn, error)
@@ -37,14 +34,6 @@ func (c container) NewTxConn() (database.TxConn, error) {
 
 func (c container) NewConn() (database.Conn, error) {
 	return database.New(c.config.Database.Driver, c.config.Database.DSN)
-}
-
-func (c container) NewTxMediaService(tx database.TxConn) media.TxService {
-	return media.NewTxService(tx)
-}
-
-func (c container) NewMediaService(db database.Conn) media.Service {
-	return media.NewMediaService(db)
 }
 
 func NewContainer(cfg *config.Config) (*container, error) {

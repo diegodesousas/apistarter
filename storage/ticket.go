@@ -5,7 +5,6 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	"github.com/diegodesousas/apistarter/database"
-	"github.com/diegodesousas/apistarter/media"
 	"github.com/diegodesousas/apistarter/ticket"
 )
 
@@ -24,12 +23,6 @@ func (s TicketStorage) Create(ctx context.Context, tkt ticket.Ticket) error {
 	if err = s.conn.ExecContext(ctx, sql, args...).Scan(&tkt.ID); err != nil {
 		return err
 	}
-
-	//for _, m := range tkt.Medias {
-	//	if err := s.createMedia(ctx, tkt.ID, &m); err != nil {
-	//		return err
-	//	}
-	//}
 
 	return nil
 }
@@ -59,12 +52,4 @@ func (s TicketStorage) FindById(ctx context.Context, id string) (*ticket.Ticket,
 	}
 
 	return tkt, nil
-}
-
-func (s TicketStorage) FindMediaByTicketId(ctx context.Context, id string) ([]media.Media, error) {
-	panic("implement me")
-}
-
-func (s TicketStorage) createMedia(ctx context.Context, id int64, m *media.Media) error {
-	panic("implement me")
 }
