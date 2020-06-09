@@ -68,11 +68,7 @@ shell:
 		${IMAGE} \
 		bash
 
-build-app:
-	go mod vendor
-	go build main.go
-
-watch:
+mod:
 	@docker run \
 		-it \
 		-v ${PWD}:${APPDIR} \
@@ -81,4 +77,15 @@ watch:
 		--rm  \
 		-w ${APPDIR} \
 		${IMAGE} \
-		dogo
+		go mod vendor
+
+dev:
+	@docker run \
+		-it \
+		-v ${PWD}:${APPDIR} \
+		-p ${HTTP_PORT}:${HTTP_PORT} \
+		--name ${APPNAME} \
+		--rm  \
+		-w ${APPDIR} \
+		${IMAGE} \
+		modd

@@ -4,7 +4,8 @@ EXPOSE $HTTP_PORT
 WORKDIR /go/src/github.com/diegodesousas/apistarter
 
 FROM base as developer
-RUN go get github.com/liudng/dogo
+ENV GO111MODULE on
+RUN go get github.com/cortesi/modd/cmd/modd
 
 FROM base AS compiler
 COPY . ./

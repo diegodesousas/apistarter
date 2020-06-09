@@ -8,16 +8,25 @@ import (
 )
 
 type Container interface {
-	NewTicketService() ticket.Service
-	NewMediaService(conn database.Conn) media.Service
-	NewTxMediaService(tx database.TxConn) media.TxService
-	NewTxlTicketService(tx database.TxConn) ticket.TxService
+	NewTicketService(ticket.Storage) ticket.Service
+	NewMediaService(database.Conn) media.Service
+	NewTxMediaService(database.TxConn) media.TxService
+	NewTxlTicketService(database.TxConn) ticket.TxService
+	NewTicketStorage(database.TxConn) ticket.Storage
 	NewConn() (database.Conn, error)
 }
 
 type container struct {
 	conn   database.Conn
 	config *config.Config
+}
+
+func (c container) NewTicketService(storage ticket.Storage) ticket.Service {
+	return ticket.NewService(storage)
+}
+
+func (c container) NewTicketStorage(tx database.TxConn) ticket.Storage {
+	return ticket.NewStorage(tx)
 }
 
 func (c container) NewTxConn() (database.TxConn, error) {
@@ -38,10 +47,6 @@ func (c container) NewTxlTicketService(tx database.TxConn) ticket.TxService {
 
 func (c container) NewMediaService(db database.Conn) media.Service {
 	return media.NewMediaService(db)
-}
-
-func (c container) NewTicketService() ticket.Service {
-	return ticket.NewService(c.conn, c.NewMediaService(c.conn))
 }
 
 func NewContainer(cfg *config.Config) (*container, error) {

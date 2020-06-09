@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	FindTicketByIdHandler = func(w http.ResponseWriter, r *http.Request, container di.Container) error {
-		return FindTicketById(w, r, container.NewTicketService())
+	FindTicketByIdHandler = func(w http.ResponseWriter, r *http.Request, tx database.TxConn, container di.Container) error {
+		return FindTicketById(w, r, container.NewTicketService(container.NewTicketStorage(tx)))
 	}
 	CreateTicketHandler = func(w http.ResponseWriter, r *http.Request, tx database.TxConn, container di.Container) error {
 		return CreateTicket(w, r, container.NewTxlTicketService(tx))
