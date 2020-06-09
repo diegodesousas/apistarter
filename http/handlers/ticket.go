@@ -15,13 +15,13 @@ var (
 		return FindTicketById(w, r, container.NewTicketService(container.NewTicketStorage(tx)))
 	}
 	CreateTicketHandler = func(w http.ResponseWriter, r *http.Request, tx database.TxConn, container di.Container) error {
-		return CreateTicket(w, r, container.NewTxlTicketService(tx))
+		return CreateTicket(w, r, container.NewTicketService(container.NewTicketStorage(tx)))
 	}
 )
 
-func CreateTicket(w http.ResponseWriter, r *http.Request, service ticket.TxService) error {
-	tkt := &ticket.Ticket{}
-	if err := json.NewDecoder(r.Body).Decode(tkt); err != nil {
+func CreateTicket(w http.ResponseWriter, r *http.Request, service ticket.Service) error {
+	tkt := ticket.Ticket{}
+	if err := json.NewDecoder(r.Body).Decode(&tkt); err != nil {
 		return err
 	}
 

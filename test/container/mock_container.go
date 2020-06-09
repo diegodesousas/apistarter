@@ -28,7 +28,7 @@ func (m MockContainer) NewTxMediaService(tx database.TxConn) media.TxService {
 	return m.MockTxMediaService
 }
 
-func (m MockContainer) NewTxlTicketService(tx database.TxConn) ticket.TxService {
+func (m MockContainer) NewTxlTicketService(tx database.TxConn) ticket.Service {
 	return m.MockTxTicketService
 }
 
